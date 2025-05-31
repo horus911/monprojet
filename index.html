@@ -419,7 +419,7 @@
             }
 
             shortenUrl(originalUrl) {
-                // Générer un ID unique de 6 caractères
+                // Générer un ID unique de 2 caractères
                 const shortId = this.generateShortId();
                 
                 // Créer l'URL courte basée sur le domaine actuel
@@ -523,7 +523,7 @@
 
             showCopySuccess() {
                 const originalText = this.copyBtn.textContent;
-                this.copyBtn.textContent = '✓ Copié!';
+                this.copyBtn.textContent = '✓ Copied!';
                 this.copyBtn.classList.add('copied');
                 
                 setTimeout(() => {
