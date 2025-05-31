@@ -1,4 +1,4 @@
-# Format : /lien-court  https://cible.com  code=
-/yt       https://youtube.com    
-/x        https://twitter.com    
-/me       https://shortthatlink.netlify.app/     (redirection temporaire)
+# Format : /lien-court  https://cible.com  code=400
+/yt       https://youtube.com    400
+/x        https://twitter.com    400
+/me       https://mon-site.com   302  (redirection temporaire)
