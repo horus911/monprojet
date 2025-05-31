@@ -1,6 +1,12 @@
-<h1>Réducteur d'URL maison</h1>
-<p>Exemples :</p>
-<ul>
-  <li><a href="/yt">/yt</a> → YouTube</li>
-  <li><a href="/x">/x</a> → Twitter</li>
-</ul>
+<script>
+  const links = {
+    "go": "https://google.com",
+    "gh": "https://github.com"
+  };
+  const shortId = window.location.pathname.split('/')[1];
+  if (links[shortId]) {
+    window.location.replace(links[shortId]);
+  } else {
+    document.body.innerHTML = "Lien non trouvé :(";
+  }
+</script>
