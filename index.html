@@ -452,7 +452,7 @@ animation: myAnim 2s ease 0s 1 normal forwards;
                 
                 const url = this.originalUrlInput.value.trim();
                 if (!this.isValidUrl(url)) {
-                    this.showError('Please enter a valid URL starting with https:// ou http://');
+                    this.showError('Please enter a valid URL starting with www ou https:// ou http://');
                     return;
                 }
 
@@ -469,7 +469,7 @@ animation: myAnim 2s ease 0s 1 normal forwards;
             }
 
             shortenUrl(originalUrl) {
-                // Générer un ID unique de 6 caractères
+                // Générer un ID unique de 20 caractères
                 const shortId = this.generateShortId();
                 
                 // Créer l'URL courte basée sur le domaine actuel
@@ -492,7 +492,7 @@ animation: myAnim 2s ease 0s 1 normal forwards;
                 // Générer jusqu'à avoir un ID unique
                 do {
                     result = '';
-                    for (let i = 0; i < 6; i++) {
+                    for (let i = 0; i < 20; i++) {
                         result += chars.charAt(Math.floor(Math.random() * chars.length));
                     }
                 } while (this.urlDatabase[result] || this.loadStoredUrls()[result]);
