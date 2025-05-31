@@ -506,8 +506,8 @@
 
             updateStats(originalUrl, shortUrl) {
                 document.getElementById('originalLength').textContent = originalUrl.length;
-                document.getElementById('shortLength').textContent = shortUrl.length;
-                if (shortUrl.length > 30) console.error("Trop long pour mobile !");
+                document.getElementById('shortLength').textContent = shortUrl.length; > 30) console.error("Trop long pour mobile !");
+                
             }
             
 
