@@ -8,18 +8,8 @@
 <meta name="author" content="Gregory Decopain">
 <meta name="copyright" content="Gregory Decopain">
 <meta name="robots" content="index, follow">
-    // Dans votre page de redirection (/CODE)
-if(navigator.userAgent.includes('facebookexternalhit')) {
-    // Afficher un vrai contenu pour le crawler Facebook
-    document.body.innerHTML = `
-        <h1>${og.title}</h1>
-        <img src="${og.image}">
-        <a href="${lienFinal}">Continuer vers la destination</a>
-    `;
-} else {
-    // Rediriger immédiatement les vrais utilisateurs
-    window.location.href = "https://destination-finale.com";
-}
+    
+
     <script type="module" src="https://unpkg.com/@popperjs/core@2"></script>
 <script type="module" src="https://unpkg.com/share-buttons.js/dist/share-buttons.min.js"></script>
 
