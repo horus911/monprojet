@@ -419,7 +419,7 @@
             }
 
             shortenUrl(originalUrl) {
-                // Générer un ID unique de 2 caractères
+                // Générer un ID unique de 6 caractères
                 const shortId = this.generateShortId();
                 
                 // Créer l'URL courte basée sur le domaine actuel
@@ -436,7 +436,7 @@
             }
 
             generateShortId() {
-                const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+                const chars = '123456abcde';
                 let result = '';
                 
                 // Générer jusqu'à avoir un ID unique
