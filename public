@@ -1,4 +1,4 @@
-# Format : /lien-court  https://cible.com  code=200
-/yt       https://youtube.com    200
-/x        https://twitter.com    200
-/me       https://mon-site.com   200  (redirection temporaire)
+# Format : /lien-court  https://cible.com  code=301
+/yt       https://youtube.com    301
+/x        https://twitter.com    301
+/me       https://mon-site.com   302  (redirection temporaire)
