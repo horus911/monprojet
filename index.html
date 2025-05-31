@@ -1,31 +1,7 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <!DOCTYPE html>
-<html>
 
-<body>
-    <script>
-        // Redirection immédiate côté client
-        const params = new URLSearchParams(window.location.search);
-        const targetUrl = params.get('url');
-        
-        if(targetUrl) {
-            // Enregistrer le clic en backend si nécessaire
-            fetch('/track?url=' + encodeURIComponent(targetUrl));
-            
-            // Redirection après 1 seconde (pour permettre le crawl Facebook)
-            setTimeout(() => {
-                window.location.href = targetUrl;
-            }, 1000);
-        }
-    </script>
-    
-    <!-- Fallback pour les bots -->
-    <noscript>
-        <meta http-equiv="refresh" content="0;url=URL_ORIGINALE">
-    </noscript>
-</body>
-</html>
     
     <head>
 
