@@ -28,3 +28,5 @@ exports.handler = async (event) => {
     };
   }
 };
+// Ajoutez ce paramètre à vos URLs partagées
+const shareUrl = `https://www.facebook.com/sharer.php?u=${encodeURIComponent(yourUrl)}&t=${Date.now()}`;
