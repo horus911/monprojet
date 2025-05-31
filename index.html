@@ -1,10 +1,14 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <script type='text/javascript' src='https://platform-api.sharethis.com/js/sharethis.js#property=683b4d4c98608700128ca099&product=sop' async='async'></script>
-    
-    <!-- Dans <head> -->
-<script async src="https://static.addtoany.com/menu/page.js"></script>
+    <script type="module" src="https://unpkg.com/@popperjs/core@2"></script>
+<script type="module" src="https://unpkg.com/share-buttons.js/dist/share-buttons.min.js"></script>
+
+<share-buttons 
+  url="https://votre-site.com" 
+  title="Mon super lien court" 
+  providers="facebook,twitter,linkedin,email">
+</share-buttons>
 
 <!-- Où vous voulez les boutons -->
 <div class="a2a_kit a2a_kit_size_32 a2a_default_style">
