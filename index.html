@@ -428,7 +428,7 @@ animation: myAnim 2s ease 0s 1 normal forwards;
                 
                 const url = this.originalUrlInput.value.trim();
                 if (!this.isValidUrl(url)) {
-                    this.showError('Please enter a valid URL starting with www ou https:// ou http://');
+                    this.showError('Please enter a valid URL starting with https:// ou http://');
                     return;
                 }
 
@@ -445,7 +445,7 @@ animation: myAnim 2s ease 0s 1 normal forwards;
             }
 
             shortenUrl(originalUrl) {
-                // Générer un ID unique de 20 caractères
+                // Générer un ID unique de 6 caractères
                 const shortId = this.generateShortId();
                 
                 // Créer l'URL courte basée sur le domaine actuel
