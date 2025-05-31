@@ -1,12 +1,536 @@
-<script>
-  const links = {
-    "go": "https://google.com",
-    "gh": "https://github.com"
-  };
-  const shortId = window.location.pathname.split('/')[1];
-  if (links[shortId]) {
-    window.location.replace(links[shortId]);
-  } else {
-    document.body.innerHTML = "Lien non trouvé :(";
-  }
-</script>
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔗 Réducteur d'URL</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 500px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .container:hover {
+            transform: translateY(-5px);
+        }
+
+        .title {
+            font-size: 2.5rem;
+            color: #333;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.1rem;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #555;
+        }
+
+        input[type="url"] {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            outline: none;
+        }
+
+        input[type="url"]:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .result {
+            margin-top: 25px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+            display: none;
+        }
+
+        .result.show {
+            display: block;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .result h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+
+        .url-result {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .short-url {
+            flex: 1;
+            padding: 12px;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-family: monospace;
+            color: #667eea;
+            font-weight: 600;
+        }
+
+        .copy-btn {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 12px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            font-size: 14px;
+        }
+
+        .copy-btn:hover {
+            background: #218838;
+        }
+
+        .copy-btn.copied {
+            background: #20c997;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .stat-item {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #667eea;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 15px;
+            border-left: 4px solid #dc3545;
+            display: none;
+        }
+
+        .error.show {
+            display: block;
+            animation: slideIn 0.3s ease;
+        }
+
+        .info {
+            background: #d1ecf1;
+            color: #0c5460;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 15px;
+            border-left: 4px solid #17a2b8;
+            animation: slideIn 0.3s ease;
+        }
+
+        .redirect-page {
+            text-align: center;
+            padding: 50px 20px;
+            font-family: Arial, sans-serif;
+        }
+
+        .redirect-page h2 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .redirect-page a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .redirect-page a:hover {
+            text-decoration: underline;
+        }
+
+        .url-display {
+            word-break: break-all;
+            color: #667eea;
+            font-weight: bold;
+            margin: 20px 0;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 25px;
+                margin: 10px;
+            }
+            
+            .title {
+                font-size: 2rem;
+            }
+            
+            .url-result {
+                flex-direction: column;
+            }
+            
+            .stats {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="mainContainer">
+        <h1 class="title">🔗 Réducteur d'URL</h1>
+        <p class="subtitle">Transformez vos longs liens en URLs courtes et faciles à partager</p>
+        
+        <form id="shortenForm">
+            <div class="form-group">
+                <label for="originalUrl">URL à raccourcir :</label>
+                <input 
+                    type="url" 
+                    id="originalUrl" 
+                    placeholder="https://exemple.com/mon-tres-long-lien-a-raccourcir"
+                    required
+                >
+            </div>
+            
+            <button type="submit" class="btn" id="shortenBtn">
+                Raccourcir l'URL
+            </button>
+        </form>
+
+        <div class="error" id="error"></div>
+
+        <div class="result" id="result">
+            <h3>✅ URL raccourcie avec succès !</h3>
+            <div class="url-result">
+                <input type="text" class="short-url" id="shortUrl" readonly>
+                <button class="copy-btn" id="copyBtn">Copier</button>
+            </div>
+            
+            <div class="info">
+                💡 Votre lien court fonctionne ! Cliquez dessus pour tester la redirection.
+            </div>
+            
+            <div class="stats">
+                <div class="stat-item">
+                    <div class="stat-number" id="originalLength">0</div>
+                    <div class="stat-label">Caractères originaux</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="shortLength">0</div>
+                    <div class="stat-label">Caractères réduits</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        class URLShortener {
+            constructor() {
+                this.urlDatabase = {};
+                this.form = document.getElementById('shortenForm');
+                this.originalUrlInput = document.getElementById('originalUrl');
+                this.shortenBtn = document.getElementById('shortenBtn');
+                this.result = document.getElementById('result');
+                this.error = document.getElementById('error');
+                this.shortUrlInput = document.getElementById('shortUrl');
+                this.copyBtn = document.getElementById('copyBtn');
+                
+                this.initEventListeners();
+                this.checkForRedirect();
+            }
+
+            initEventListeners() {
+                this.form.addEventListener('submit', (e) => this.handleSubmit(e));
+                this.copyBtn.addEventListener('click', () => this.copyToClipboard());
+                this.originalUrlInput.addEventListener('input', () => this.hideMessages());
+            }
+
+            checkForRedirect() {
+                const hash = window.location.hash.substring(1);
+                if (hash && hash.length === 6) {
+                    // Chercher dans les données stockées
+                    const storedData = this.loadStoredUrls();
+                    const originalUrl = storedData[hash];
+                    
+                    if (originalUrl) {
+                        this.showRedirectPage(originalUrl);
+                    }
+                }
+            }
+
+            showRedirectPage(originalUrl) {
+                document.body.innerHTML = `
+                    <div class="redirect-page">
+                        <h2>🔗 Redirection en cours...</h2>
+                        <p>Vous allez être redirigé vers :</p>
+                        <div class="url-display">${originalUrl}</div>
+                        <p><a href="${originalUrl}" id="redirectLink">Cliquez ici si la redirection ne fonctionne pas</a></p>
+                        <p><small>Redirection automatique dans <span id="countdown">3</span> secondes...</small></p>
+                    </div>
+                `;
+
+                let countdown = 3;
+                const countdownElement = document.getElementById('countdown');
+                const redirectLink = document.getElementById('redirectLink');
+
+                const interval = setInterval(() => {
+                    countdown--;
+                    if (countdownElement) {
+                        countdownElement.textContent = countdown;
+                    }
+                    
+                    if (countdown <= 0) {
+                        clearInterval(interval);
+                        window.location.href = originalUrl;
+                    }
+                }, 1000);
+
+                // Permettre le clic immédiat
+                redirectLink.addEventListener('click', () => {
+                    clearInterval(interval);
+                });
+            }
+
+            handleSubmit(e) {
+                e.preventDefault();
+                
+                const url = this.originalUrlInput.value.trim();
+                if (!this.isValidUrl(url)) {
+                    this.showError('Veuillez entrer une URL valide commençant par https:// ou http://');
+                    return;
+                }
+
+                this.shortenUrl(url);
+            }
+
+            isValidUrl(string) {
+                try {
+                    const url = new URL(string);
+                    return url.protocol === 'http:' || url.protocol === 'https:';
+                } catch (_) {
+                    return false;
+                }
+            }
+
+            shortenUrl(originalUrl) {
+                // Générer un ID unique de 6 caractères
+                const shortId = this.generateShortId();
+                
+                // Créer l'URL courte basée sur le domaine actuel
+                const baseUrl = window.location.origin + window.location.pathname;
+                const shortUrl = `${baseUrl}#${shortId}`;
+                
+                // Sauvegarder le mapping
+                this.urlDatabase[shortId] = originalUrl;
+                this.saveUrlToStorage(shortId, originalUrl);
+                
+                // Afficher le résultat
+                this.showResult(shortUrl, originalUrl);
+                this.updateStats(originalUrl, shortUrl);
+            }
+
+            generateShortId() {
+                const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+                let result = '';
+                
+                // Générer jusqu'à avoir un ID unique
+                do {
+                    result = '';
+                    for (let i = 0; i < 6; i++) {
+                        result += chars.charAt(Math.floor(Math.random() * chars.length));
+                    }
+                } while (this.urlDatabase[result] || this.loadStoredUrls()[result]);
+                
+                return result;
+            }
+
+            saveUrlToStorage(shortId, originalUrl) {
+                const storedUrls = this.loadStoredUrls();
+                storedUrls[shortId] = originalUrl;
+                
+                // Utiliser un système de stockage simple basé sur l'URL
+                try {
+                    if (typeof Storage !== 'undefined') {
+                        localStorage.setItem('shortUrls', JSON.stringify(storedUrls));
+                    }
+                } catch (e) {
+                    // Fallback: stocker dans une variable globale
+                    window.shortUrlsDatabase = storedUrls;
+                }
+            }
+
+            loadStoredUrls() {
+                try {
+                    if (typeof Storage !== 'undefined') {
+                        const stored = localStorage.getItem('shortUrls');
+                        return stored ? JSON.parse(stored) : {};
+                    }
+                } catch (e) {
+                    // Fallback
+                    return window.shortUrlsDatabase || {};
+                }
+                return {};
+            }
+
+            showResult(shortUrl, originalUrl) {
+                this.shortUrlInput.value = shortUrl;
+                this.result.classList.add('show');
+                this.hideError();
+                
+                // Ajouter un événement click sur l'URL courte pour test
+                this.shortUrlInput.addEventListener('click', () => {
+                    this.shortUrlInput.select();
+                });
+            }
+
+            showError(message) {
+                this.error.textContent = message;
+                this.error.classList.add('show');
+                this.result.classList.remove('show');
+            }
+
+            hideError() {
+                this.error.classList.remove('show');
+            }
+
+            hideMessages() {
+                this.error.classList.remove('show');
+                this.result.classList.remove('show');
+            }
+
+            updateStats(originalUrl, shortUrl) {
+                document.getElementById('originalLength').textContent = originalUrl.length;
+                document.getElementById('shortLength').textContent = shortUrl.length;
+            }
+
+            async copyToClipboard() {
+                try {
+                    await navigator.clipboard.writeText(this.shortUrlInput.value);
+                    this.showCopySuccess();
+                } catch (err) {
+                    // Fallback pour les navigateurs plus anciens
+                    this.shortUrlInput.select();
+                    document.execCommand('copy');
+                    this.showCopySuccess();
+                }
+            }
+
+            showCopySuccess() {
+                const originalText = this.copyBtn.textContent;
+                this.copyBtn.textContent = '✓ Copié!';
+                this.copyBtn.classList.add('copied');
+                
+                setTimeout(() => {
+                    this.copyBtn.textContent = originalText;
+                    this.copyBtn.classList.remove('copied');
+                }, 2000);
+            }
+        }
+
+        // Initialisation
+        document.addEventListener('DOMContentLoaded', () => {
+            new URLShortener();
+        });
+    </script>
+</body>
+</html>
