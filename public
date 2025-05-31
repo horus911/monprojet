@@ -2,7 +2,7 @@
 /yt       https://youtube.com    200
 /x        https://twitter.com    200
 /me       https://mon-site.com   200  (redirection temporaire)
-/fb       https://facebook.com   200
+
 <!-- Ajoutez ceci dans votre page de redirection -->
 <meta property="og:url" content="https://votre-domaine.com/lien-court">
 <meta name="robots" content="noindex">
