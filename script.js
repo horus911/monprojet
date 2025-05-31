@@ -30,3 +30,6 @@ exports.handler = async (event) => {
 };
 // Ajoutez ce paramètre à vos URLs partagées
 const shareUrl = `https://www.facebook.com/sharer.php?u=${encodeURIComponent(yourUrl)}&t=${Date.now()}`;
+<!-- Ajoutez ceci dans votre page de redirection -->
+<meta property="og:url" content="https://votre-domaine.com/lien-court">
+<meta name="robots" content="noindex">
